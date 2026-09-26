@@ -4,7 +4,7 @@ on:
   schedule:
     # GitHub Actions cron is always UTC.
     # 03:30 UTC == 09:00 AM IST (Asia/Kolkata, UTC+05:30).
-    - cron: "30 3 * * *"
+    - cron: "55 10 * * *"
   # Allows you to run the digest on demand from the Actions tab.
   workflow_dispatch:
 
