@@ -1,0 +1,19 @@
+services:
+  mongodb:
+    image: mongo:8
+    container_name: epic-games-mongodb
+    restart: unless-stopped
+
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: epic_bot
+      MONGO_INITDB_ROOT_PASSWORD: epic_bot_password
+      MONGO_INITDB_DATABASE: epic_games
+
+    ports:
+      - "27017:27017"
+
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data:
