@@ -1,0 +1,46 @@
+name: Send Epic free games digest
+
+on:
+  schedule:
+    # GitHub Actions cron is always UTC.
+    # 03:30 UTC == 09:00 AM IST (Asia/Kolkata, UTC+05:30).
+    - cron: "30 3 * * *"
+  # Allows you to run the digest on demand from the Actions tab.
+  workflow_dispatch:
+
+concurrency:
+  group: epic-free-games-digest
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  digest:
+    name: Detect free games and email the digest
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Send digest
+        run: npm run digest
+        env:
+          EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
+          EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
+          EMAIL_SECURE: ${{ secrets.EMAIL_SECURE }}
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          MONGO_URL: ${{ secrets.MONGO_URL }}

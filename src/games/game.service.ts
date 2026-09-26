@@ -32,5 +32,13 @@ export class GameService {
 
     return newGames;
   }
+
+  async getGamesToNotify(): Promise<FreeGame[]> {
+    return this.gameRepository.findUnnotified();
+  }
+
+  async markNotified(games: FreeGame[]): Promise<void> {
+    await this.gameRepository.markNotified(games.map((game) => game.id));
+  }
 }
 

@@ -41,6 +41,11 @@ const gameSchema = new Schema(
       default: null,
     },
 
+    notifiedAt: {
+      type: Date,
+      default: null,
+    },
+
     firstSeenAt: {
       type: Date,
       default: Date.now,

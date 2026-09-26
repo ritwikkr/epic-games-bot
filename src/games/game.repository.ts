@@ -33,4 +33,34 @@ export class GameRepository {
     // Game was newly inserted
     return game;
   }
+
+  async findUnnotified(): Promise<FreeGame[]> {
+    const games = await GameModel.find({ notifiedAt: null });
+
+    return games.map((game) => this.toFreeGame(game));
+  }
+
+  async markNotified(ids: string[]): Promise<void> {
+    if (ids.length === 0) {
+      return;
+    }
+
+    await GameModel.updateMany(
+      { id: { $in: ids } },
+      { $set: { notifiedAt: new Date() } },
+    );
+  }
+
+  private toFreeGame(game: any): FreeGame {
+    return {
+      id: game.id,
+      title: game.title,
+      description: game.description ?? "",
+      url: game.url,
+      imageUrl: game.imageUrl ?? null,
+      originalPrice: game.originalPrice ?? "Unknown",
+      startDate: game.startDate ? new Date(game.startDate).toISOString() : null,
+      endDate: game.endDate ? new Date(game.endDate).toISOString() : null,
+    };
+  }
 }
