@@ -102,6 +102,16 @@ export class GameScheduler {
     await this.checkForGames().catch((error) => {
       console.error("❌ Failed to check for free games:", error);
     });
+    if (JSON.parse(process.env.SEND_EMAIL_FOR_TESTING ?? "false")) {
+      console.log(
+        "⚠️ SEND_EMAIL_FOR_TESTING is set to true - sending the daily digest right away for testing purposes.",
+      );
+      // Send the daily digest right away (for testing purposes).
+      await this.sendDailyDigest().catch((error) => {
+        console.error("❌ Failed to send the daily digest:", error);
+      });
+      return;
+    }
 
     // Keep the database fresh every 6 hours.
     cron.schedule(
@@ -128,4 +138,3 @@ export class GameScheduler {
     console.log("⏰ Game scheduler started - emails every day at 9:00 AM IST.");
   }
 }
-
